@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard | ISATU DocuTrack</title>
+
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <style>
+        :root {
+            --green: #075B39;
+            --dark-green: #003D29;
+            --cream: #F8F5EC;
+            --gold: #C9A44C;
+            --white: #FFFFFF;
+            --muted: #718078;
+            --border: #E5EAE6;
+            --red: #B42318;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: var(--cream);
+            color: #24352D;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--dark-green);
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            padding: 5px 10px 30px;
+            border-bottom: 1px solid rgba(255,255,255,.15);
+        }
+
+        .brand h2 {
+            font-size: 22px;
+            color: white;
+        }
+
+        .brand span {
+            color: var(--gold);
+        }
+
+        .brand p {
+            font-size: 12px;
+            color: #D4E1D9;
+            margin-top: 7px;
+        }
+
+        .nav-label {
+            color: #A9C4B5;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 28px 10px 12px;
+        }
+
+        .nav-link {
+            display: block;
+            color: #E8F0EB;
+            text-decoration: none;
+            padding: 13px 12px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            background: var(--green);
+            color: white;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,.15);
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: white;
+            padding: 19px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topbar h1 {
+            font-size: 21px;
+            color: var(--dark-green);
+        }
+
+        .user-info {
+            text-align: right;
+            font-size: 13px;
+        }
+
+        .user-info strong {
+            display: block;
+            color: var(--dark-green);
+        }
+
+        .user-info span {
+            color: var(--muted);
+        }
+
+        .content {
+            max-width: 1150px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            color: var(--dark-green);
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .notice {
+            background: #FFF8E6;
+            border: 1px solid #EBD89D;
+            border-radius: 10px;
+            padding: 14px 16px;
+            color: #70551A;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 23px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.035);
+        }
+
+        .card h3 {
+            color: var(--dark-green);
+            font-size: 17px;
+            margin-bottom: 9px;
+        }
+
+        .card-description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        #reader {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 9px;
+        }
+
+        #reader video {
+            border-radius: 9px;
+        }
+
+        .scanner-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 9px;
+        }
+
+        input {
+            width: 100%;
+            min-width: 0;
+            border: 1px solid #D5DED8;
+            border-radius: 8px;
+            padding: 13px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(7,91,57,.1);
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        button:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .primary-btn {
+            background: var(--green);
+            color: white;
+        }
+
+        .primary-btn:hover:not(:disabled) {
+            background: var(--dark-green);
+        }
+
+        .secondary-btn {
+            background: #EAF1EC;
+            color: var(--dark-green);
+        }
+
+        .signed-btn {
+            background: var(--gold);
+            color: var(--dark-green);
+            width: 100%;
+            margin-top: 18px;
+            padding: 15px;
+        }
+
+        .signed-btn:hover:not(:disabled) {
+            background: #B89035;
+        }
+
+        .message {
+            margin-top: 13px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            color: var(--red);
+        }
+
+        .message.success {
+            color: var(--green);
+        }
+
+        .message.info {
+            color: #735B20;
+        }
+
+        .request-card {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .request-card.visible {
+            display: block;
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .status-pill {
+            background: #FFF1D1;
+            color: #795B16;
+            border-radius: 30px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .detail-item {
+            min-width: 0;
+        }
+
+        .detail-item small {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .detail-item strong {
+            display: block;
+            color: #263B30;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .confirmation-note {
+            margin-top: 16px;
+            padding: 12px;
+            background: #F3F7F4;
+            border-radius: 8px;
+            color: #52665A;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+            padding: 25px 5px;
+        }
+
+        @media (max-width: 850px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .brand {
+                padding-bottom: 15px;
+            }
+
+            .nav-label {
+                margin-top: 15px;
+            }
+
+            .sidebar nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .nav-link {
+                padding: 9px 10px;
+                margin: 0;
+                font-size: 12px;
+            }
+
+            .sidebar-bottom {
+                margin-top: 12px;
+                padding-top: 12px;
+            }
+
+            .topbar {
+                padding: 16px;
+            }
+
+            .topbar h1 {
+                font-size: 17px;
+            }
+
+            .content {
+                padding: 18px 14px;
+            }
+
+            .card {
+                padding: 17px;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>ISATU <span>DocuTrack</span></h2>
+            <p>Faculty Portal</p>
+        </div>
+
+        <div class="nav-label">Faculty Menu</div>
+
+        <nav>
+            <a href="dashboard.html" class="nav-link active">QR Scanner / Verify</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="#" id="logoutButton" class="nav-link">Log Out</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <h1>Faculty Dashboard</h1>
+            <div class="user-info">
+                <strong id="userName">Faculty</strong>
+                <span>Faculty Account</span>
+            </div>
+        </header>
+
+        <section class="content">
+            <div class="welcome">
+                <h2>Document Signature Verification</h2>
+                <p>Scan the QR code or enter the tracking number to find a student's document request.</p>
+            </div>
+
+            <div class="notice">
+                <strong>Important:</strong> Only confirm a request after you have physically reviewed and signed
+                the student's document. Scanning a QR code does not automatically mark a document as signed.
+            </div>
+
+            <div class="work-grid">
+
+                <section class="card">
+                    <h3>Scan Student QR Code</h3>
+                    <p class="card-description">
+                        Allow camera access and position the document's QR code inside the scanner.
+                    </p>
+
+                    <div id="reader"></div>
+
+                    <div class="scanner-actions">
+                        <button type="button" class="primary-btn" id="startScannerButton">
+                            Start Camera
+                        </button>
+
+                        <button type="button" class="secondary-btn" id="stopScannerButton" disabled>
+                            Stop Camera
+                        </button>
+                    </div>
+
+                    <p id="scannerMessage" class="message"></p>
+                </section>
+
+                <section class="card">
+                    <h3>Search Tracking Number</h3>
+                    <p class="card-description">
+                        Enter the tracking number printed on the student's document request.
+                    </p>
+
+                    <div class="search-row">
+                        <input
+                            type="text"
+                            id="trackingNumber"
+                            placeholder="Enter tracking number"
+                            autocomplete="off"
+                        >
+                        <button type="button" class="primary-btn" id="searchButton">
+                            Search
+                        </button>
+                    </div>
+
+                    <p id="searchMessage" class="message"></p>
+
+                    <div class="confirmation-note">
+                        Make sure the tracking number belongs to the document presented by the student before
+                        confirming its signature.
+                    </div>
+                </section>
+
+            </div>
+
+            <section class="card request-card" id="requestCard">
+                <div class="request-header">
+                    <h3>Request Details</h3>
+                    <span class="status-pill" id="requestStatus">PENDING</span>
+                </div>
+
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <small>Tracking Number</small>
+                        <strong id="detailTracking">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <small>Student Name</small>
+                        <strong id="detailStudent">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <small>Document</small>
+                        <strong id="detailDocument">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <small>Requested Office</small>
+                        <strong id="detailOffice">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <small>Student ID</small>
+                        <strong id="detailStudentId">—</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <small>Date Requested</small>
+                        <strong id="detailDate">—</strong>
+                    </div>
+
+                    <div class="detail-item full-width">
+                        <small>Purpose</small>
+                        <strong id="detailPurpose">—</strong>
+                    </div>
+                </div>
+
+                <div class="confirmation-note" id="confirmationNote">
+                    Review the request and confirm only after the physical document has been signed.
+                </div>
+
+                <button
+                    type="button"
+                    class="signed-btn"
+                    id="confirmSignedButton"
+                    disabled
+                >
+                    Confirm Document Signed
+                </button>
+
+                <p id="confirmMessage" class="message"></p>
+            </section>
+
+            <div class="empty-state" id="emptyState">
+                No request selected. Scan a QR code or search for a tracking number.
+            </div>
+        </section>
+    </main>
+</div>
+
+<script type="module" src="../js/faculty-dashboard.js"></script>
+</body>
+</html>

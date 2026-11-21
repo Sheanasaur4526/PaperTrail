@@ -1,0 +1,779 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Priority Queue | ISATU DocuTrack</title>
+
+    <style>
+        :root {
+            --green: #075B39;
+            --dark-green: #003D29;
+            --cream: #F8F5EC;
+            --gold: #C9A44C;
+            --white: #FFFFFF;
+            --text: #26352D;
+            --muted: #718078;
+            --border: #E5EAE6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--cream);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            background: var(--dark-green);
+            color: white;
+            padding: 25px 18px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .brand-subtitle {
+            font-size: 12px;
+            color: #C9D8CF;
+            margin-bottom: 35px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            color: #AFC5B8;
+            text-transform: uppercase;
+            margin: 20px 10px 10px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            color: #E5EEE8;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--green);
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topbar h2 {
+            margin: 0;
+            color: var(--dark-green);
+            font-size: 21px;
+        }
+
+        .user-info {
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .user-info strong {
+            display: block;
+            color: var(--dark-green);
+        }
+
+        .content {
+            padding: 30px 35px;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 8px;
+            color: var(--dark-green);
+            font-size: 27px;
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* SUMMARY CARDS */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .summary-card span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .summary-card h2 {
+            margin: 12px 0 0;
+            color: var(--green);
+            font-size: 28px;
+        }
+
+        /* ALGORITHM INFORMATION */
+
+        .algorithm-panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 25px;
+        }
+
+        .algorithm-panel h3 {
+            margin: 0 0 8px;
+            color: var(--dark-green);
+        }
+
+        .algorithm-panel p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .weight-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .weight-item {
+            background: #F5F8F5;
+            border-radius: 8px;
+            padding: 13px;
+            text-align: center;
+        }
+
+        .weight-item strong {
+            display: block;
+            color: var(--green);
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+
+        .weight-item span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* TABLE */
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .panel-header h3 {
+            margin: 0 0 7px;
+            color: var(--dark-green);
+        }
+
+        .panel-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .filter-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 18px 22px;
+        }
+
+        .filter-area input,
+        .filter-area select {
+            padding: 11px 13px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            font-size: 13px;
+            background: white;
+        }
+
+        .filter-area input {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1050px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px 18px;
+            border-top: 1px solid var(--border);
+            text-align: left;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        th {
+            color: var(--muted);
+            background: #F9FBF9;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        tbody tr:hover {
+            background: #F8FAF8;
+        }
+
+        .rank {
+            font-weight: bold;
+            color: var(--dark-green);
+            font-size: 16px;
+        }
+
+        .score {
+            font-weight: bold;
+            color: var(--green);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .critical {
+            background: #FCE5E5;
+            color: #A52A2A;
+        }
+
+        .high {
+            background: #FFF0D9;
+            color: #9A6016;
+        }
+
+        .medium {
+            background: #E2EDFF;
+            color: #245A9A;
+        }
+
+        .low {
+            background: #ECEFEC;
+            color: #526057;
+        }
+
+        .paid {
+            background: #DDF4E5;
+            color: #176B39;
+        }
+
+        .unpaid {
+            background: #FCE5E5;
+            color: #A52A2A;
+        }
+
+        .status-badge {
+            background: #EEF2EF;
+            color: #526057;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 6px;
+            padding: 9px 13px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+        }
+
+        .btn-secondary {
+            background: #E9EFEA;
+            color: var(--dark-green);
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--muted);
+            padding: 35px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 18px 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, .5);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--dark-green);
+        }
+
+        .close-button {
+            border: none;
+            background: none;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .detail-row {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .detail-row strong {
+            display: inline-block;
+            min-width: 150px;
+            color: var(--dark-green);
+        }
+
+        @media (max-width: 1000px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .weight-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .brand-subtitle {
+                margin-bottom: 15px;
+            }
+
+            .nav-label {
+                display: none;
+            }
+
+            .sidebar nav {
+                display: flex;
+                overflow-x: auto;
+                gap: 5px;
+            }
+
+            .nav-link {
+                white-space: nowrap;
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .topbar {
+                padding: 15px;
+            }
+
+            .topbar h2 {
+                font-size: 17px;
+            }
+
+            .content {
+                padding: 20px 12px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .summary-card {
+                padding: 15px;
+            }
+
+            .summary-card h2 {
+                font-size: 23px;
+            }
+
+            .weight-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-heading h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">ISATU DocuTrack</div>
+        <div class="brand-subtitle">Registrar Management Portal</div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <nav>
+            <a href="registrar_dashboard.html" class="nav-link">Dashboard</a>
+            <a href="requests.html" class="nav-link">All Requests</a>
+            <a href="priority-queue.html" class="nav-link active">Priority Queue</a>
+            <a href="payments.html" class="nav-link">Payments</a>
+            <a href="signatures.html" class="nav-link">Signature Requests</a>
+            <a href="messages.html" class="nav-link">Messages</a>
+            <a href="reports.html" class="nav-link">Reports</a>
+        </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <h2>Priority Queue Management</h2>
+
+            <div class="user-info">
+                <strong id="userName">Registrar</strong>
+                <span>Registrar Account</span>
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <div class="page-heading">
+                <h1>Document Priority Queue</h1>
+                <p>
+                    Review and prioritize student document requests
+                    using the weighted priority sorting algorithm.
+                </p>
+            </div>
+
+            <!-- SUMMARY -->
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+                    <span>Total Requests</span>
+                    <h2 id="totalRequests">0</h2>
+                </div>
+
+                <div class="summary-card">
+                    <span>Critical Priority</span>
+                    <h2 id="criticalCount">0</h2>
+                </div>
+
+                <div class="summary-card">
+                    <span>High Priority</span>
+                    <h2 id="highCount">0</h2>
+                </div>
+
+                <div class="summary-card">
+                    <span>Paid Requests</span>
+                    <h2 id="paidCount">0</h2>
+                </div>
+
+            </div>
+
+            <!-- ALGORITHM -->
+
+            <div class="algorithm-panel">
+
+                <h3>Weighted Priority Algorithm</h3>
+
+                <p>
+                    Each document request receives a priority score
+                    based on urgency, deadline, importance, document
+                    type, and waiting time. Requests with higher scores
+                    appear first. Equal scores are arranged using
+                    First-In, First-Out (FIFO).
+                </p>
+
+                <div class="weight-grid">
+
+                    <div class="weight-item">
+                        <strong>30%</strong>
+                        <span>Urgency</span>
+                    </div>
+
+                    <div class="weight-item">
+                        <strong>25%</strong>
+                        <span>Deadline</span>
+                    </div>
+
+                    <div class="weight-item">
+                        <strong>20%</strong>
+                        <span>Importance</span>
+                    </div>
+
+                    <div class="weight-item">
+                        <strong>15%</strong>
+                        <span>Document Type</span>
+                    </div>
+
+                    <div class="weight-item">
+                        <strong>10%</strong>
+                        <span>Waiting Time</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- QUEUE TABLE -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Ranked Document Requests</h3>
+                        <p>
+                            Highest priority scores are displayed first.
+                        </p>
+                    </div>
+
+                    <button class="btn btn-secondary" id="refreshButton">
+                        Refresh Queue
+                    </button>
+
+                </div>
+
+                <div class="filter-area">
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search student, request ID, document..."
+                    >
+
+                    <select id="priorityFilter">
+                        <option value="">All Priority Levels</option>
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+
+                    <select id="paymentFilter">
+                        <option value="">All Payment Statuses</option>
+                        <option value="PAID">Paid</option>
+                        <option value="UNPAID">Unpaid</option>
+                    </select>
+
+                    <select id="officeFilter">
+                        <option value="">All Offices</option>
+                        <option value="Registrar">Registrar</option>
+                        <option value="Student Affairs">Student Affairs</option>
+                        <option value="Accounting">Accounting</option>
+                        <option value="Library">Library</option>
+                    </select>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Request ID</th>
+                                <th>Student</th>
+                                <th>Document</th>
+                                <th>Office</th>
+                                <th>Priority Score</th>
+                                <th>Priority Level</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="priorityTableBody">
+
+                            <tr>
+                                <td colspan="10" class="empty">
+                                    Loading priority queue...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="legend">
+
+                    <div class="legend-item">
+                        <span class="badge critical">Critical</span>
+                        <span>90–100</span>
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="badge high">High</span>
+                        <span>75–89.99</span>
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="badge medium">Medium</span>
+                        <span>50–74.99</span>
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="badge low">Low</span>
+                        <span>0–49.99</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- REQUEST DETAILS MODAL -->
+
+<div class="modal" id="priorityModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h3>Priority Request Details</h3>
+            <button class="close-button" id="closeModal">&times;</button>
+        </div>
+
+        <div id="priorityDetails"></div>
+
+    </div>
+
+</div>
+
+<script type="module" src="../js/priority-queue.js"></script>
+
+</body>
+</html>

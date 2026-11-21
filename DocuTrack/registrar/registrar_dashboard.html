@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Dashboard | ISATU DocuTrack</title>
+
+    <style>
+        :root {
+            --green: #075B39;
+            --dark-green: #003D29;
+            --cream: #F8F5EC;
+            --gold: #C9A44C;
+            --white: #ffffff;
+            --text: #25352d;
+            --muted: #718078;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: var(--dark-green);
+            color: white;
+            padding: 25px 18px;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .brand span { color: var(--gold); }
+
+        .nav-link {
+            display: block;
+            color: #e6eee9;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            background: var(--green);
+            color: white;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 27px;
+            color: var(--dark-green);
+        }
+
+        .welcome p {
+            color: var(--muted);
+            margin-top: 7px;
+        }
+
+        .user-info {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .role-label {
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.05);
+        }
+
+        .card h3 {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .number {
+            font-size: 29px;
+            font-weight: bold;
+            color: var(--green);
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+        }
+
+        .section h2 {
+            color: var(--dark-green);
+            font-size: 19px;
+            margin-bottom: 18px;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .action {
+            border: 1px solid #e3e9e4;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .action h3 {
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+
+        .action p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 10px 16px;
+            background: var(--green);
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover { background: var(--dark-green); }
+
+        .logout {
+            background: #a93226;
+            margin-top: 0;
+        }
+
+        .logout:hover { background: #84251c; }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            min-width: 750px;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 13px 11px;
+            border-bottom: 1px solid #e8ece8;
+            text-align: left;
+        }
+
+        th {
+            background: #f5f7f5;
+            color: #46564d;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .critical { color: #b42318; background: #fee4e2; }
+        .high { color: #b54708; background: #ffead5; }
+        .medium { color: #805b00; background: #fff3cd; }
+        .low { color: #126b3d; background: #d9f4e4; }
+        .paid { color: #126b3d; background: #d9f4e4; }
+        .unpaid { color: #805b00; background: #fff3cd; }
+
+        .status {
+            color: #334155;
+            background: #e9eef4;
+        }
+
+        .empty {
+            padding: 25px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .view-link {
+            color: var(--green);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .view-link:hover { text-decoration: underline; }
+
+        @media (max-width: 1050px) {
+            .cards { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 650px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .brand { margin-bottom: 18px; }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .cards, .actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body data-role="registrar">
+
+    <aside class="sidebar">
+        <div class="brand">
+            ISATU <span>DocuTrack</span>
+        </div>
+
+        <a href="registrar_dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="requests.html" class="nav-link">Document Requests</a>
+        <a href="priority-queue.html" class="nav-link">Priority Queue</a>
+        <a href="payments.html" class="nav-link">Payment Verification</a>
+        <a href="signatures.html" class="nav-link">Signature Requests</a>
+        <a href="messages.html" class="nav-link">Messages</a>
+        <a href="reports.html" class="nav-link">Reports</a>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div class="welcome">
+                <h1>Registrar Dashboard</h1>
+                <p>Welcome, <strong id="userName">Loading...</strong>!</p>
+            </div>
+
+            <div class="user-info">
+                <span class="role-label" id="userRole">Registrar Account</span>
+                <button class="button logout" id="logoutButton" type="button">
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD STATISTICS -->
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Requests</h3>
+                <div class="number" id="totalRequests">0</div>
+            </div>
+
+            <div class="card">
+                <h3>Pending Requests</h3>
+                <div class="number" id="pendingRequests">0</div>
+            </div>
+
+            <div class="card">
+                <h3>Processing</h3>
+                <div class="number" id="processingRequests">0</div>
+            </div>
+
+            <div class="card">
+                <h3>Ready for Claim</h3>
+                <div class="number" id="readyRequests">0</div>
+            </div>
+
+        </section>
+
+        <!-- REQUEST MANAGEMENT -->
+        <section class="section">
+            <h2>Request Management</h2>
+
+            <div class="actions">
+
+                <div class="action">
+                    <h3>Document Requests</h3>
+                    <p>View, review, approve, reject, and process student document requests.</p>
+                    <a href="requests.html" class="button">Manage Requests</a>
+                </div>
+
+                <div class="action">
+                    <h3>Priority Queue</h3>
+                    <p>Review paid requests automatically ranked according to weighted priority.</p>
+                    <a href="priority-queue.html" class="button">View Priority Queue</a>
+                </div>
+
+                <div class="action">
+                    <h3>Payment Verification</h3>
+                    <p>Review payment records before processing eligible requests.</p>
+                    <a href="payments.html" class="button">Verify Payments</a>
+                </div>
+
+                <div class="action">
+                    <h3>Faculty Signatures</h3>
+                    <p>Monitor faculty signature requests and their completion status.</p>
+                    <a href="signatures.html" class="button">View Signatures</a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- RECENT REQUESTS -->
+        <section class="section">
+            <h2>Recent Document Requests</h2>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Student</th>
+                            <th>Document</th>
+                            <th>Priority</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="recentRequestsBody">
+                        <tr>
+                            <td colspan="7" class="empty">
+                                Loading document requests...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="requests.html" class="button">View All Requests</a>
+        </section>
+
+    </main>
+
+    <script type="module" src="../js/registrar-dashboard.js"></script>
+
+</body>
+</html>

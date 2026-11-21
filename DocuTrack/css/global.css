@@ -1,0 +1,77 @@
+
+/* =========================================
+   ISATU DOCUMENT TRACKING
+   GLOBAL STYLES
+========================================= */
+
+:root {
+    --primary: #075B39;
+    --primary-dark: #003D29;
+    --primary-light: #0B754B;
+
+    --cream: #F8F5EC;
+    --gold: #C9A44C;
+    --gold-light: #E8D6A4;
+
+    --white: #FFFFFF;
+    --black: #202820;
+
+    --gray: #6B756F;
+    --gray-light: #E5E9E5;
+    --background: #F4F7F4;
+
+    --success: #198754;
+    --danger: #DC3545;
+    --warning: #D69E20;
+
+    --shadow: 0 10px 35px rgba(0, 61, 41, 0.08);
+    --radius: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--black);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+::selection {
+    background: var(--gold-light);
+    color: var(--primary-dark);
+}

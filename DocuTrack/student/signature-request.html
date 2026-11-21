@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Signature Request | ISATU DocuTrack</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root {
+            --green: #075B39;
+            --dark-green: #003D29;
+            --cream: #F8F5EC;
+            --gold: #C9A44C;
+            --white: #FFFFFF;
+            --muted: #718078;
+            --border: #E5EAE6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: var(--cream);
+            color: #263B30;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            flex-shrink: 0;
+            background: var(--dark-green);
+            color: white;
+            padding: 25px 18px;
+        }
+
+        .brand {
+            padding: 5px 10px 25px;
+            border-bottom: 1px solid rgba(255,255,255,.15);
+        }
+
+        .brand h2 {
+            font-size: 21px;
+        }
+
+        .brand span {
+            color: var(--gold);
+        }
+
+        .brand p {
+            color: #C9D9D0;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .nav-label {
+            color: #A9C4B5;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 28px 10px 12px;
+        }
+
+        .nav-link {
+            display: block;
+            color: #E8F0EB;
+            text-decoration: none;
+            padding: 13px 12px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--green);
+            color: white;
+        }
+
+        .sidebar-bottom {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,.15);
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: white;
+            padding: 19px 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .topbar h1 {
+            font-size: 21px;
+            color: var(--dark-green);
+        }
+
+        .user-info {
+            text-align: right;
+            font-size: 13px;
+        }
+
+        .user-info strong {
+            display: block;
+            color: var(--dark-green);
+        }
+
+        .user-info span {
+            color: var(--muted);
+        }
+
+        .content {
+            max-width: 1050px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .page-heading {
+            margin-bottom: 24px;
+        }
+
+        .page-heading h2 {
+            font-size: 25px;
+            color: var(--dark-green);
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-banner {
+            background: #FFF8E6;
+            border: 1px solid #EBD89D;
+            color: #70551A;
+            padding: 15px;
+            border-radius: 9px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.035);
+        }
+
+        .section-title {
+            color: var(--dark-green);
+            font-size: 17px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 17px;
+        }
+
+        .form-group {
+            min-width: 0;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #405349;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #B42318;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D5DED8;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #263B30;
+            outline: none;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(7,91,57,.1);
+        }
+
+        input[readonly] {
+            background: #F1F4F2;
+            color: #607066;
+        }
+
+        textarea {
+            min-height: 105px;
+            resize: vertical;
+        }
+
+        .helper {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--green);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 23px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: var(--dark-green);
+        }
+
+        .submit-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            font-size: 13px;
+            margin-top: 14px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            color: #B42318;
+        }
+
+        .message.success {
+            color: var(--green);
+        }
+
+        .qr-result {
+            display: none;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 25px;
+            margin-top: 22px;
+            text-align: center;
+        }
+
+        .qr-result.visible {
+            display: block;
+        }
+
+        .qr-result h3 {
+            color: var(--dark-green);
+            margin-bottom: 8px;
+        }
+
+        .qr-result p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .tracking-number {
+            display: inline-block;
+            background: #F0F5F1;
+            color: var(--dark-green);
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 17px 0;
+            overflow-wrap: anywhere;
+        }
+
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin: 15px auto;
+            min-height: 150px;
+        }
+
+        #qrcode img,
+        #qrcode canvas {
+            margin: auto;
+        }
+
+        .print-btn {
+            background: var(--gold);
+            color: var(--dark-green);
+            border: none;
+            border-radius: 8px;
+            padding: 13px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 750px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .brand {
+                padding-bottom: 15px;
+            }
+
+            .nav-label {
+                margin-top: 15px;
+            }
+
+            .sidebar nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .nav-link {
+                padding: 9px 10px;
+                margin: 0;
+                font-size: 12px;
+            }
+
+            .sidebar-bottom {
+                margin-top: 12px;
+                padding-top: 10px;
+            }
+
+            .topbar {
+                padding: 16px;
+            }
+
+            .topbar h1 {
+                font-size: 17px;
+            }
+
+            .content {
+                padding: 18px 13px;
+            }
+
+            .form-card {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .sidebar,
+            .topbar,
+            .page-heading,
+            .info-banner,
+            .form-card,
+            .print-btn {
+                display: none !important;
+            }
+
+            .layout,
+            .main,
+            .content {
+                display: block;
+                padding: 0;
+                margin: 0;
+            }
+
+            .qr-result {
+                display: block !important;
+                border: none;
+                margin: 0;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>ISATU <span>PaperTrail</span></h2>
+            <p>Student Portal</p>
+        </div>
+
+        <div class="nav-label">Student Menu</div>
+
+        <nav>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="request-document.html" class="nav-link">Request Document</a>
+            <a href="tracking.html" class="nav-link">Track Requests</a>
+            <a href="signature-request.html" class="nav-link active">Faculty Signature</a>
+            <a href="messages.html" class="nav-link">Messages</a>
+            <a href="profile.html" class="nav-link">My Profile</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="#" id="logoutButton" class="nav-link">Log Out</a>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <h1>Faculty Signature Request</h1>
+
+            <div class="user-info">
+                <strong id="userName">Student</strong>
+                <span>Student Account</span>
+            </div>
+        </header>
+
+        <section class="content">
+
+            <div class="page-heading">
+                <h2>Request a Faculty Signature</h2>
+                <p>
+                    Submit your document details and select the faculty member who needs to sign.
+                    A QR code and tracking number will be generated after submission.
+                </p>
+            </div>
+
+            <div class="info-banner">
+                <strong>How it works:</strong>
+                Submit your request, print the generated QR code, and attach it to your physical document.
+                Present the document to the selected faculty member. The faculty member will scan the QR code
+                and update your request after signing.
+            </div>
+
+            <form class="form-card" id="signatureRequestForm">
+
+                <h3 class="section-title">Student Information</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="studentName">Full Name</label>
+                        <input type="text" id="studentName" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentId">Student ID <span class="required">*</span></label>
+                        <input type="text" id="studentId" required placeholder="Enter your student ID">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="course">Course / Program <span class="required">*</span></label>
+                        <input type="text" id="course" required placeholder="e.g. BS Computer Science">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="yearLevel">Year Level <span class="required">*</span></label>
+                        <select id="yearLevel" required>
+                            <option value="">Select year level</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                            <option value="5th Year">5th Year</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <h3 class="section-title" style="margin-top:30px;">Faculty Information</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="facultyName">Faculty Name <span class="required">*</span></label>
+                        <input
+                            type="text"
+                            id="facultyName"
+                            required
+                            placeholder="Enter faculty member's full name"
+                        >
+                        <p class="helper">Enter the faculty member who will sign your document.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">Department / Office <span class="required">*</span></label>
+                        <input
+                            type="text"
+                            id="department"
+                            required
+                            placeholder="Enter department or office"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="facultyEmail">Faculty Email (Optional)</label>
+                        <input
+                            type="email"
+                            id="facultyEmail"
+                            placeholder="faculty@isatu.edu.ph"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="neededDate">Date Needed <span class="required">*</span></label>
+                        <input type="date" id="neededDate" required>
+                    </div>
+
+                </div>
+
+                <h3 class="section-title" style="margin-top:30px;">Document Information</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="documentType">Document Type <span class="required">*</span></label>
+                        <select id="documentType" required>
+                            <option value="">Select document type</option>
+                            <option value="Clearance Form">Clearance Form</option>
+                            <option value="Enrollment Form">Enrollment Form</option>
+                            <option value="Thesis / Capstone Document">Thesis / Capstone Document</option>
+                            <option value="OJT / Internship Form">OJT / Internship Form</option>
+                            <option value="Excuse Letter">Excuse Letter</option>
+                            <option value="Academic Requirement">Academic Requirement</option>
+                            <option value="Other Document">Other Document</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject / Course (Optional)</label>
+                        <input
+                            type="text"
+                            id="subject"
+                            placeholder="e.g. Software Engineering 2"
+                        >
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="purpose">Purpose of Signature <span class="required">*</span></label>
+                        <textarea
+                            id="purpose"
+                            required
+                            placeholder="Explain why you need the faculty member's signature..."
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="notes">Additional Instructions (Optional)</label>
+                        <textarea
+                            id="notes"
+                            placeholder="Add any relevant details or instructions..."
+                        ></textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitButton">
+                    Submit Signature Request
+                </button>
+
+                <p id="formMessage" class="message"></p>
+
+            </form>
+
+            <section class="qr-result" id="qrResult">
+                <h3>Signature Request Submitted!</h3>
+                <p>Keep this tracking number and attach the printed QR code to your physical document.</p>
+
+                <div class="tracking-number" id="trackingNumberDisplay"></div>
+
+                <div id="qrcode"></div>
+
+                <p>
+                    Present this QR code to the selected faculty member.
+                    Your request will be updated after the faculty member confirms the signature.
+                </p>
+
+                <button type="button" class="print-btn" id="printButton">
+                    Print QR Code
+                </button>
+            </section>
+
+        </section>
+    </main>
+</div>
+
+<script type="module" src="../js/signature-request.js"></script>
+</body>
+</html>

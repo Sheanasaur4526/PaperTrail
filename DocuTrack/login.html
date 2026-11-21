@@ -1,0 +1,444 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ISATU Smart Document Request and Tracking System Login">
+    <title>Login | ISATU PaperTrail</title>
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/auth.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #F8F5EC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 1050px;
+            min-height: 620px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #FFFFFF;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 61, 41, 0.12);
+        }
+
+        .login-banner {
+            background: linear-gradient(145deg, #075B39, #003D29);
+            color: #FFFFFF;
+            padding: 55px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #C9A44C;
+            color: #003D29;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .brand-name h2 {
+            font-size: 17px;
+        }
+
+        .brand-name p {
+            font-size: 11px;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        .banner-content {
+            margin: 65px 0;
+        }
+
+        .banner-content .tagline {
+            color: #E4C979;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 18px;
+        }
+
+        .banner-content h1 {
+            font-size: 38px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .banner-content p {
+            color: #E4EDE7;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .banner-features {
+            display: grid;
+            gap: 17px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: #E4EDE7;
+        }
+
+        .feature-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: rgba(255,255,255,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #E4C979;
+        }
+
+        .banner-footer {
+            font-size: 11px;
+            color: #C6D8CE;
+            margin-top: 40px;
+        }
+
+        .login-form-section {
+            padding: 65px 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mobile-brand {
+            display: none;
+        }
+
+        .form-heading {
+            margin-bottom: 35px;
+        }
+
+        .form-heading h2 {
+            color: #003D29;
+            font-size: 29px;
+            margin-bottom: 10px;
+        }
+
+        .form-heading p {
+            color: #777777;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 21px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 9px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            height: 49px;
+            padding: 0 15px;
+            border: 1px solid #DADFD9;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #FFFFFF;
+            color: #333333;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #075B39;
+            box-shadow: 0 0 0 3px rgba(7,91,57,0.08);
+        }
+
+        .role-description {
+            font-size: 11px;
+            color: #888888;
+            margin-top: 8px;
+        }
+
+        .login-button {
+            width: 100%;
+            height: 49px;
+            border: none;
+            border-radius: 8px;
+            background: #075B39;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-button:hover {
+            background: #003D29;
+            transform: translateY(-1px);
+        }
+
+        .login-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            display: none;
+            padding: 12px;
+            border-radius: 7px;
+            font-size: 12px;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            display: block;
+            background: #FCE8E6;
+            color: #B3261E;
+        }
+
+        .message.success {
+            display: block;
+            background: #E6F4EA;
+            color: #137333;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #777777;
+            font-size: 13px;
+        }
+
+        .register-link a {
+            color: #075B39;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .security-note {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 11px;
+            color: #999999;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .login-container {
+                grid-template-columns: 1fr;
+                max-width: 450px;
+                min-height: auto;
+            }
+
+            .login-banner {
+                display: none;
+            }
+
+            .login-form-section {
+                padding: 35px 25px;
+            }
+
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 35px;
+            }
+
+            .mobile-brand .brand-icon {
+                width: 42px;
+                height: 42px;
+            }
+
+            .mobile-brand h3 {
+                font-size: 14px;
+                color: #003D29;
+            }
+
+            .mobile-brand p {
+                font-size: 10px;
+                color: #777777;
+                margin-top: 3px;
+            }
+
+            .form-heading h2 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <!-- LEFT SIDE: BRANDING -->
+        <section class="login-banner">
+
+            <div class="brand">
+                <div class="brand-icon">I</div>
+
+                <div class="brand-name">
+                    <h2>ISATU PaperTrail</h2>
+                    <p>Smart Document Request System</p>
+                </div>
+            </div>
+
+            <div class="banner-content">
+                <p class="tagline">SMARTER UNIVERSITY SERVICES</p>
+
+                <h1>Your Documents.<br>Tracked with Ease.</h1>
+
+                <p>
+                    Access university document services in one place.
+                    Submit requests, monitor processing, communicate with
+                    university offices, and receive updates conveniently.
+                </p>
+            </div>
+
+            <div class="banner-features">
+
+                <div class="feature">
+                    <span class="feature-icon">✓</span>
+                    <span>Easy online document requests</span>
+                </div>
+
+                <div class="feature">
+                    <span class="feature-icon">↗</span>
+                    <span>Real-time request tracking</span>
+                </div>
+
+                <div class="feature">
+                    <span class="feature-icon">⌑</span>
+                    <span>QR-based signature requests</span>
+                </div>
+
+            </div>
+
+            <div class="banner-footer">
+                © 2026 ISATU Smart Document Request and Tracking System
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT SIDE: LOGIN FORM -->
+        <section class="login-form-section">
+
+            <div class="mobile-brand">
+                <div class="brand-icon">I</div>
+
+                <div>
+                    <h3>ISATU DOCUMENT TRACKING</h3>
+                    <p>Smart Document Request System</p>
+                </div>
+            </div>
+
+            <div class="form-heading">
+                <h2>Welcome!</h2>
+                <p>Enter your name and select your role to continue.</p>
+            </div>
+
+            <div id="loginMessage" class="message" role="alert"></div>
+
+            <form id="loginForm">
+
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+
+                    <input
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Select Your Role</label>
+
+                    <select id="role" name="role" required>
+                        <option value="">Choose your role</option>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="registrar">Registrar</option>
+                    </select>
+
+                    <p class="role-description">
+                        Select the appropriate role to access your dashboard.
+                    </p>
+                </div>
+
+                <button type="submit" class="login-button" id="loginButton">
+                    Continue to Dashboard
+                </button>
+
+            </form>
+
+            <div class="register-link">
+                Demo access: No account registration required.
+            </div>
+
+            <div class="security-note">
+                ISATU Smart Document Request and Tracking System
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- VANILLA JAVASCRIPT LOGIN -->
+    <script src="js/login.js"></script>
+
+</body>
+</html>

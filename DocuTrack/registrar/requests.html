@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Requests | ISATU DocuTrack</title>
+
+    <style>
+        :root {
+            --green: #075B39;
+            --dark-green: #003D29;
+            --cream: #F8F5EC;
+            --gold: #C9A44C;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f3;
+            color: #26352d;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 245px;
+            height: 100vh;
+            background: var(--dark-green);
+            color: white;
+            padding: 25px 16px;
+        }
+
+        .brand {
+            padding: 0 12px 25px;
+            border-bottom: 1px solid #ffffff30;
+            margin-bottom: 25px;
+        }
+
+        .brand h2 { margin: 0 0 6px; }
+        .brand small { color: #d7e5dc; }
+
+        .nav-link {
+            display: block;
+            padding: 13px 14px;
+            margin: 5px 0;
+            color: #e6eee9;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--green);
+            color: white;
+        }
+
+        .main {
+            margin-left: 245px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 { margin: 0; font-size: 26px; }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px #00000008;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--green);
+        }
+
+        .stat small { color: #6b7280; }
+        .stat h2 { margin: 10px 0 0; color: var(--dark-green); }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        input, select {
+            padding: 11px;
+            border: 1px solid #dfe4df;
+            border-radius: 7px;
+            width: 100%;
+        }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 1050px;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 13px 11px;
+            border-bottom: 1px solid #e8ece8;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f5f7f5;
+            color: #46564d;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .critical { color: #b42318; background: #fee4e2; }
+        .high { color: #b54708; background: #ffead5; }
+        .medium { color: #805b00; background: #fff3cd; }
+        .low { color: #126b3d; background: #d9f4e4; }
+        .paid { color: #126b3d; background: #d9f4e4; }
+        .unpaid { color: #805b00; background: #fff3cd; }
+
+        .status {
+            background: #e9eef4;
+            color: #334155;
+        }
+
+        .btn {
+            border: 0;
+            padding: 8px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .btn-primary { background: var(--green); color: white; }
+        .btn-danger { background: #fee4e2; color: #b42318; }
+        .btn-gold { background: var(--gold); color: #222; }
+        .btn-secondary { background: #e8ece8; color: #26352d; }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            color: #6b7280;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #0009;
+            z-index: 10;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 650px;
+            margin: 40px auto;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .modal-content h2 { color: var(--dark-green); }
+        .detail-row { margin: 12px 0; line-height: 1.5; }
+        .detail-row strong { display: inline-block; min-width: 145px; }
+
+        .modal-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .close {
+            float: right;
+            border: 0;
+            background: transparent;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+
+            .main { margin-left: 0; padding: 18px; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .filters { grid-template-columns: 1fr; }
+            .topbar { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (max-width: 500px) {
+            .stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="brand">
+        <h2>ISATU DocuTrack</h2>
+        <small>Registrar Portal</small>
+    </div>
+
+    <a href="registrar_dashboard.html" class="nav-link">Dashboard</a>
+    <a href="requests.html" class="nav-link active">Document Requests</a>
+    <a href="priority-queue.html" class="nav-link">Priority Queue</a>
+    <a href="payments.html" class="nav-link">Payment Verification</a>
+    <a href="signatures.html" class="nav-link">Signature Requests</a>
+    <a href="messages.html" class="nav-link">Messages</a>
+    <a href="reports.html" class="nav-link">Reports</a>
+    <a href="../login.html" class="nav-link" id="logoutButton">Logout</a>
+</aside>
+
+<main class="main">
+
+    <div class="topbar">
+        <div>
+            <h1>Document Requests</h1>
+            <p>Review, prioritize, and process student document requests.</p>
+        </div>
+        <div>Logged in as: <strong id="userName">Registrar</strong></div>
+    </div>
+
+    <section class="stats">
+        <div class="stat">
+            <small>Total Requests</small>
+            <h2 id="totalCount">0</h2>
+        </div>
+        <div class="stat">
+            <small>Paid Requests</small>
+            <h2 id="paidCount">0</h2>
+        </div>
+        <div class="stat">
+            <small>Pending Requests</small>
+            <h2 id="pendingCount">0</h2>
+        </div>
+        <div class="stat">
+            <small>Processing</small>
+            <h2 id="processingCount">0</h2>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Request Management</h2>
+        <p>Paid requests are ranked by weighted priority score, highest first.</p>
+
+        <div class="filters">
+            <input type="search" id="searchInput" placeholder="Search ID, student, or document">
+
+            <select id="statusFilter">
+                <option value="">All Request Statuses</option>
+                <option value="Pending Payment">Pending Payment</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Processing">Processing</option>
+                <option value="Ready for Claim">Ready for Claim</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+
+            <select id="officeFilter">
+                <option value="">All Offices</option>
+                <option>Office of the University Registrar</option>
+                <option>Accounting Office</option>
+                <option>Office of Student Affairs</option>
+                <option>Library</option>
+                <option>College / Department Office</option>
+            </select>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Student</th>
+                        <th>Document</th>
+                        <th>Office</th>
+                        <th>Date Requested</th>
+                        <th>Priority Score</th>
+                        <th>Priority Level</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="requestTableBody">
+                    <tr><td colspan="10" class="empty">Loading requests...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<div class="modal" id="requestModal">
+    <div class="modal-content">
+        <button class="close" id="closeModal">&times;</button>
+        <h2>Request Details</h2>
+        <div id="requestDetails"></div>
+        <div class="modal-actions" id="modalActions"></div>
+    </div>
+</div>
+
+<script type="module" src="../js/registrar-requests.js"></script>
+</body>
+</html>
